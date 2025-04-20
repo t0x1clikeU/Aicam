@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>写真</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #111;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    video {
+      width: 90%;
+      max-width: 500px;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #28a745;
+      color: white;
+      cursor: pointer;
+    }
+    button:active {
+      background-color: #1e7e34;
+    }
+  </style>
+</head>
+<body>
+
+  <video id="video" autoplay playsinline></video>
+  <button onclick="capturePhoto()">📸 撮影！</button>
+
+  <script>
+    const video = document.getElementById('video');
+    const urlParams = new URLSearchParams(window.location.search);
+    const webhook = urlParams.get('hook');
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        alert("カメラへのアクセスが許可されていません。");
+        console.error(err);
+      });
+
+    function capturePhoto() {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+      canvas.toBlob(blob => {
+        const formData = new FormData();
+        formData.append('file', blob, 'photo.jpg');
+        fetch(webhook, {
+          method: 'POST',
+          body: formData
+        }).then(res => {
+          alert("送信しました！");
+        }).catch(err => {
+          alert("送信に失敗しました。");
+          console.error(err);
+        });
+      }, 'image/jpeg');
+    }
+  </script>
+
+</body>
+</html>

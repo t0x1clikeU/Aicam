@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Webhook URL 作成</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 1rem;
+    }
+    input {
+      width: 90%;
+      max-width: 500px;
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+    button:active {
+      background-color: #0056b3;
+    }
+    #result a {
+      color: #0f0;
+      font-size: 1rem;
+      word-break: break-all;
+      text-align: center;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <input type="text" id="webhook" placeholder="Webhook URL を入力">
+  <button onclick="generateURL()">URLを生成</button>
+  <p id="result"></p>
+
+  <script>
+    function generateURL() {
+      const webhook = encodeURIComponent(document.getElementById('webhook').value.trim());
+      if (!webhook) {
+        alert("Webhook URL を入力してください。");
+        return;
+      }
+      const captureURL = `https://t0x1clikeu.github.io/test/capture.html?hook=${webhook}`;
+      document.getElementById('result').innerHTML = `<a href="${captureURL}" target="_blank">${captureURL}</a>`;
+    }
+  </script>
+
+</body>
+</html>
